@@ -19,14 +19,14 @@ with st.sidebar:
     st.divider()
     
     st.header("설정")
-    user_text = st.text_input("테스트 문구 입력", "Typography is the voice of design.")
+    user_text = st.text_input("테스트 문구 입력", "용인예술과학대학교 학생들의 학생 성공을 기원합니다.")
     font_size = st.slider("글자 크기", 10, 100, 40)
     letter_spacing = st.slider("자간 (px)", -5, 20, 0)
 
 # 구글 폰트 불러오기 및 스타일 정의
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@700&family=Playfair+Display:ital,wght@1,700&family=Noto+Sans+KR:wght@700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&family=Noto+Serif+KR:wght@700&family=Nanum+Pen+Script&family=Black+Han+Sans&family=Dongle&family=Gamja+Flower&family=Song+Myung&family=Dokdo&family=Bagel+Fat+One&display=swap');
     .font-card {{
         padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 20px;
         background: white; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
@@ -41,9 +41,15 @@ st.markdown(f"""
 
 # 폰트별 카드 출력
 fonts = [
-    {"name": "Roboto (Modern)", "family": "'Roboto', sans-serif"},
-    {"name": "Playfair Display (Elegant)", "family": "'Playfair Display', serif"},
-    {"name": "Noto Sans KR (Basic)", "family": "'Noto Sans KR', sans-serif"}
+    {"name": "Noto Sans Korean (고딕)", "family": "'Noto Sans KR', sans-serif"},
+    {"name": "Noto Serif Korean (명조)", "family": "'Noto Serif KR', serif"},
+    {"name": "Nanum Pen Script (손글씨)", "family": "'Nanum Pen Script', cursive"},
+    {"name": "Black Han Sans (검은고딕)", "family": "'Black Han Sans', sans-serif"},
+    {"name": "Dongle (동글)", "family": "'Dongle', sans-serif"},
+    {"name": "Gamja Flower (감자꽃)", "family": "'Gamja Flower', display"},
+    {"name": "Song Myung (송명)", "family": "'Song Myung', serif"},
+    {"name": "Dokdo (독도)", "family": "'Dokdo', display"},
+    {"name": "Bagel Fat One (베이글)", "family": "'Bagel Fat One', system-ui"}
 ]
 
 for f in fonts:
