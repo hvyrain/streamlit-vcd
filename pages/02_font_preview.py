@@ -56,4 +56,5 @@ for f in fonts:
         </div>
     """, unsafe_allow_html=True)
 
-st.button("메인으로 돌아가기", on_click=lambda: st.switch_page("main.py"))
+if st.button("메인으로 돌아가기"):
+    st.switch_page("main.py")

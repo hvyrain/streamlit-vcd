@@ -48,4 +48,5 @@ with category[3]:
     st.write("### 영상 제작")
     show_gallery("Video")
 
-st.button("메인으로 돌아가기", on_click=lambda: st.switch_page("main.py"))
+if st.button("메인으로 돌아가기"):
+    st.switch_page("main.py")

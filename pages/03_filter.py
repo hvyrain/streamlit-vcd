@@ -59,4 +59,5 @@ if uploaded_file:
 else:
     st.info("왼쪽 상단에서 이미지를 업로드해 주세요.")
 
-st.button("메인으로 돌아가기", on_click=lambda: st.switch_page("main.py"))
+if st.button("메인으로 돌아가기"):
+    st.switch_page("main.py")

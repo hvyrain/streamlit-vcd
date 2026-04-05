@@ -39,4 +39,5 @@ with col2:
 
 st.success("데이터를 시각화하면 복잡한 수치도 한눈에 파악할 수 있습니다!")
 
-st.button("메인으로 돌아가기", on_click=lambda: st.switch_page("main.py"))
+if st.button("메인으로 돌아가기"):
+    st.switch_page("main.py")
