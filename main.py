@@ -30,7 +30,7 @@ with st.sidebar:
     """)
 
 # 2. 메인 타이틀 디자인
-st.title("🚀 시각디자인 X Streamlit")
+st.title("🚀 시각디자인 + Streamlit")
 st.subheader("디자이너를 위한 5가지 마법 도구 샘플")
 st.markdown("이 샘플은 **시각디자인과 학생**들의 `streamlit`을 활용한 UI 디자인과 데이터 시각화에 대한 이해를 돕기 위해 **서대우 교수**가 AI를 활용하여 제작하였습니다.")
 st.write("왼쪽 사이드바의 메뉴를 클릭하거나, 아래 카드를 보고 원하는 도구를 선택해 보세요!")
