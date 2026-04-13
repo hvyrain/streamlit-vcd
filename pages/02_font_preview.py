@@ -1,66 +1,83 @@
 import streamlit as st
+from utils import add_sidebar, set_common_style
 
-st.set_page_config(page_title="폰트 미리보기", layout="wide")
+# 페이지 설정
+st.set_page_config(page_title="폰트 미리보기 | VCD Toolkit", layout="wide")
 
-st.title("🔠 타이포그래피 미리보기")
-st.write("디자인에 어울리는 구글 폰트를 테스트해 보세요.")
+# 스타일 및 사이드바 적용
+set_common_style()
+add_sidebar()
 
-# 사이드바에서 텍스트 속성 조절
+st.markdown('<h1 class="main-title">🔠 타이포그래피 스튜디오</h1>', unsafe_allow_html=True)
+st.write("다양한 폰트를 실시간으로 비교하고, 프로젝트의 인상에 가장 잘 어울리는 스타일을 선택하세요.")
+
+# 사이드바 설정 강화
 with st.sidebar:
-    st.title("🎨 VCD Toolkit")
-    st.divider()
-    st.markdown("### 🧭 내비게이션")
-    st.page_link("main.py", label="홈 화면", icon="🏠")
-    st.page_link("pages/01_color_palette.py", label="1. 컬러 팔레트", icon="🎨")
-    st.page_link("pages/02_font_preview.py", label="2. 폰트 미리보기", icon="🔠")
-    st.page_link("pages/03_filter.py", label="3. 이미지 필터", icon="📷")
-    st.page_link("pages/04_data.py", label="4. 데이터 인포그래픽", icon="📊")
-    st.page_link("pages/05_portfolio.py", label="5. AI 포트폴리오", icon="🖼️")
-    st.divider()
+    st.header("🎛️ 타이포 옵션")
+    user_text = st.text_area("테스트 문구 입력", "디자인은 문제를 해결하는 과정이자 아름다움을 찾는 여정입니다.")
+    font_size = st.slider("글자 크기", 10, 120, 48)
+    letter_spacing = st.slider("자간 (px)", -10, 30, 0)
+    font_weight = st.selectbox("폰트 두께", ["Regular", "Bold", "Black"], index=1)
     
-    st.header("설정")
-    user_text = st.text_input("테스트 문구 입력", "용인예술과학대학교 학생들의 학생 성공을 기원합니다.")
-    font_size = st.slider("글자 크기", 10, 100, 40)
-    letter_spacing = st.slider("자간 (px)", -5, 20, 0)
+    weight_map = {"Regular": 400, "Bold": 700, "Black": 900}
+    weight_val = weight_map[font_weight]
 
-# 구글 폰트 불러오기 및 스타일 정의
+# 구글 폰트 주입
 st.markdown(f"""
     <style>
-    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@700&family=Noto+Serif+KR:wght@700&family=Nanum+Pen+Script&family=Black+Han+Sans&family=Dongle&family=Gamja+Flower&family=Song+Myung&family=Dokdo&family=Bagel+Fat+One&display=swap');
-    .font-card {{
-        padding: 20px; border-radius: 15px; border: 1px solid #eee; margin-bottom: 20px;
-        background: white; box-shadow: 2px 2px 10px rgba(0,0,0,0.05);
+    @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;700;900&family=Noto+Serif+KR:wght@400;700;900&family=Nanum+Pen+Script&family=Black+Han+Sans&family=Dongle:wght@400;700&family=Gamja+Flower&family=Song+Myung&family=Bagel+Fat+One&display=swap');
+    
+    .specimen-card {{
+        background: white;
+        padding: 40px;
+        border-radius: 20px;
+        border: 1px solid #eee;
+        margin-bottom: 30px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.03);
     }}
-    .preview-text {{
+    .font-label {{
+        color: #6366f1;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-size: 0.8rem;
+        margin-bottom: 15px;
+        display: block;
+    }}
+    .font-preview {{
         font-size: {font_size}px;
         letter-spacing: {letter_spacing}px;
-        line-height: 1.2;
+        font-weight: {weight_val};
+        line-height: 1.3;
+        word-break: keep-all;
     }}
     </style>
-    """, unsafe_allow_html=True)
+""", unsafe_allow_html=True)
 
-# 폰트별 카드 출력
+# 폰트 리스트
 fonts = [
-    {"name": "Noto Sans Korean (고딕)", "family": "'Noto Sans KR', sans-serif"},
-    {"name": "Noto Serif Korean (명조)", "family": "'Noto Serif KR', serif"},
-    {"name": "Nanum Pen Script (손글씨)", "family": "'Nanum Pen Script', cursive"},
-    {"name": "Black Han Sans (검은고딕)", "family": "'Black Han Sans', sans-serif"},
-    {"name": "Dongle (동글)", "family": "'Dongle', sans-serif"},
-    {"name": "Gamja Flower (감자꽃)", "family": "'Gamja Flower', display"},
-    {"name": "Song Myung (송명)", "family": "'Song Myung', serif"},
-    {"name": "Dokdo (독도)", "family": "'Dokdo', display"},
-    {"name": "Bagel Fat One (베이글)", "family": "'Bagel Fat One', system-ui"}
+    {"name": "Noto Sans KR (Gothic)", "family": "'Noto Sans KR', sans-serif"},
+    {"name": "Noto Serif KR (Myeongjo)", "family": "'Noto Serif KR', serif"},
+    {"name": "Black Han Sans (Impact)", "family": "'Black Han Sans', sans-serif"},
+    {"name": "Song Myung (Classic Serif)", "family": "'Song Myung', serif"},
+    {"name": "Nanum Pen Script (Handwriting)", "family": "'Nanum Pen Script', cursive"},
+    {"name": "Bagel Fat One (Display)", "family": "'Bagel Fat One', display"},
+    {"name": "Dongle (Cute & Rounded)", "family": "'Dongle', sans-serif"},
 ]
 
-for f in fonts:
-    st.markdown(f"""
-        <div class="font-card">
-            <small style="color: gray;">{f['name']}</small>
-            <div class="preview-text" style="font-family: {f['family']};">
-                {user_text}
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+# 2열 그리드로 렌더링
+col1, col2 = st.columns(2)
 
-if st.button("메인으로 돌아가기"):
-    st.switch_page("main.py")
+for i, f in enumerate(fonts):
+    target_col = col1 if i % 2 == 0 else col2
+    with target_col:
+        st.markdown(f"""
+            <div class="specimen-card">
+                <span class="font-label">{f['name']}</span>
+                <div class="font-preview" style="font-family: {f['family']};">
+                    {user_text}
+                </div>
+            </div>
+        """, unsafe_allow_html=True)
+
+st.success("💡 Tip: 제목용 폰트는 두껍고 개성 있는 서체를, 본문용 폰트는 가독성이 좋은 산세리프(고딕) 서체를 추천합니다.")
