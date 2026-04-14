@@ -13,15 +13,6 @@ st.write("작업물을 카테고리별로 우아하게 분류하고 큐레이션
 
 st.markdown("""
     <style>
-    .portfolio-img {
-        width: 100%;
-        border-radius: 15px;
-        transition: transform 0.4s ease;
-        cursor: pointer;
-    }
-    .portfolio-img:hover {
-        transform: scale(1.03);
-    }
     .category-label {
         font-size: 0.75rem;
         background: #f1f5f9;

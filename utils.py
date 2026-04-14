@@ -1,5 +1,6 @@
 import streamlit as st
 from PIL import Image
+import io
 
 def set_common_style():
     """
@@ -86,7 +87,7 @@ def add_sidebar():
         st.divider()
         st.info("""
         **VCD Toolkit Guide**  
-        이 대시보드는 디자인 업무 효율을 위해 최적화되었습니다. 피드백이 있다면 언제든 알려주세요!
+        이 대시보드는 용인예술과학대학교 시각디자인과 학생들을 위한 샘플 앱으로 제작되었습니다. 피드백이 있다면 언제든 알려주세요!
         """)
         
         # 메인으로 돌아가기 버튼 (사이드바 하단 고정 느낌)
@@ -133,3 +134,53 @@ def extract_colors(image, num_colors=5):
         colors.append(hex_color)
     
     return colors
+
+@st.cache_data(show_spinner=False)
+def extract_colors_from_bytes(image_bytes: bytes, num_colors: int = 5):
+    """
+    이미지 바이트에서 주요 색상을 추출하여 HEX 코드 리스트로 반환합니다.
+    (Streamlit 캐싱용: bytes 입력을 사용)
+    """
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    return extract_colors(img, num_colors=num_colors)
+
+@st.cache_data(show_spinner=False)
+def filter_image_to_png_bytes(
+    image_bytes: bytes,
+    filter_type: str,
+    brightness: float,
+    contrast: float,
+    blur_intensity: int | None = None,
+) -> bytes:
+    """
+    이미지 바이트에 필터/보정을 적용하고 PNG 바이트로 반환합니다. (캐싱용)
+    """
+    from PIL import ImageFilter, ImageOps, ImageEnhance
+
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")
+    filtered_img = img.copy()
+
+    if filter_type == "Grayscale":
+        filtered_img = ImageOps.grayscale(img).convert("RGB")
+    elif filter_type == "Blur":
+        intensity = blur_intensity or 5
+        filtered_img = img.filter(ImageFilter.GaussianBlur(intensity))
+    elif filter_type == "Sepia":
+        sepia_matrix = (
+            0.393, 0.769, 0.189, 0,
+            0.349, 0.686, 0.168, 0,
+            0.272, 0.534, 0.131, 0
+        )
+        filtered_img = img.convert("RGB").convert("RGB", sepia_matrix)
+    elif filter_type == "Vibrant":
+        enhancer = ImageEnhance.Color(img)
+        filtered_img = enhancer.enhance(2.0)
+
+    enhancer_bright = ImageEnhance.Brightness(filtered_img)
+    filtered_img = enhancer_bright.enhance(brightness)
+    enhancer_con = ImageEnhance.Contrast(filtered_img)
+    filtered_img = enhancer_con.enhance(contrast)
+
+    buf = io.BytesIO()
+    filtered_img.save(buf, format="PNG")
+    return buf.getvalue()
