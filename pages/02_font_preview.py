@@ -1,4 +1,5 @@
 import streamlit as st
+import html
 from utils import add_sidebar, set_common_style
 
 # 페이지 설정
@@ -21,6 +22,9 @@ with st.sidebar:
     
     weight_map = {"Regular": 400, "Bold": 700, "Black": 900}
     weight_val = weight_map[font_weight]
+
+# 사용자 입력은 HTML에 삽입되므로 escape 처리
+safe_user_text = html.escape(user_text).replace("\n", "<br/>")
 
 # 구글 폰트 주입
 st.markdown(f"""
@@ -75,7 +79,7 @@ for i, f in enumerate(fonts):
             <div class="specimen-card">
                 <span class="font-label">{f['name']}</span>
                 <div class="font-preview" style="font-family: {f['family']};">
-                    {user_text}
+                    {safe_user_text}
                 </div>
             </div>
         """, unsafe_allow_html=True)
