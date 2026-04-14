@@ -8,6 +8,4 @@ dependencies = [
     "plotly>=6.7.0",
     "streamlit>=1.56.0",
     "Pillow>=10.0.0",
-    "colormath>=3.0.0",
-    "numpy>=1.26.0",
 ]

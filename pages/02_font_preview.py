@@ -12,16 +12,23 @@ add_sidebar()
 st.markdown('<h1 class="main-title">🔠 타이포그래피 스튜디오</h1>', unsafe_allow_html=True)
 st.write("다양한 폰트를 실시간으로 비교하고, 프로젝트의 인상에 가장 잘 어울리는 스타일을 선택하세요.")
 
-# 사이드바 설정 강화
-with st.sidebar:
-    st.header("🎛️ 타이포 옵션")
-    user_text = st.text_area("테스트 문구 입력", "디자인은 문제를 해결하는 과정이자 아름다움을 찾는 여정입니다.")
-    font_size = st.slider("글자 크기", 10, 120, 48)
-    letter_spacing = st.slider("자간 (px)", -10, 30, 0)
-    font_weight = st.selectbox("폰트 두께", ["Regular", "Bold", "Black"], index=1)
-    
-    weight_map = {"Regular": 400, "Bold": 700, "Black": 900}
-    weight_val = weight_map[font_weight]
+# 메인 영역 옵션 패널 (입력칸이 확실히 보이도록)
+with st.container(border=True):
+    st.subheader("🎛️ 타이포 옵션")
+    col_a, col_b = st.columns([2, 1])
+    with col_a:
+        user_text = st.text_area(
+            "테스트 문구 입력",
+            "디자인은 문제를 해결하는 과정이자 아름다움을 찾는 여정입니다.",
+            height=120,
+        )
+    with col_b:
+        font_size = st.slider("글자 크기", 10, 120, 48)
+        letter_spacing = st.slider("자간 (px)", -10, 30, 0)
+        font_weight = st.selectbox("폰트 두께", ["Regular", "Bold", "Black"], index=1)
+
+weight_map = {"Regular": 400, "Bold": 700, "Black": 900}
+weight_val = weight_map[font_weight]
 
 # 사용자 입력은 HTML에 삽입되므로 escape 처리
 safe_user_text = html.escape(user_text).replace("\n", "<br/>")

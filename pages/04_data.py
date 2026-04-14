@@ -13,16 +13,20 @@ add_sidebar()
 st.markdown('<h1 class="main-title">📊 디자인 트렌드 인포그래픽</h1>', unsafe_allow_html=True)
 st.write("2024년 디자인 트렌드 선호도 수치를 시각화한 대시보드입니다. 차트의 요소를 클릭하거나 호버하여 상세 데이터를 확인하세요.")
 
-# 샘플 데이터 생성
-data = {
-    "디자인 키워드": ["미니멀리즘", "3D 일러스트", "레트로", "다크모드", "뉴모피즘", "AI 아트"],
-    "선호도(%)": [40, 25, 15, 10, 5, 5],
-    "성장률": ["+12%", "+20%", "+5%", "+2%", "-3%", "+300%"]
-}
-df = pd.DataFrame(data)
-
 # 차트 색상 (파스텔 테마)
 colors = ['#FFC1CC', '#B0E0E6', '#F0E68C', '#E6E6FA', '#98FB98', '#FFDAB9']
+
+# 샘플 데이터 생성 (캐싱)
+@st.cache_data(show_spinner=False)
+def get_sample_df() -> pd.DataFrame:
+    data = {
+        "디자인 키워드": ["미니멀리즘", "3D 일러스트", "레트로", "다크모드", "뉴모피즘", "AI 아트"],
+        "선호도(%)": [40, 25, 15, 10, 5, 5],
+        "성장률": ["+12%", "+20%", "+5%", "+2%", "-3%", "+300%"],
+    }
+    return pd.DataFrame(data)
+
+df = get_sample_df()
 
 # 레이아웃 구성
 col1, col2 = st.columns([1, 1.5])
@@ -57,7 +61,7 @@ with col2:
             df, 
             values='선호도(%)', 
             names='디자인 키워드',
-            color_discrete_sequence=px.colors.qualitative.Pastel,
+            color_discrete_sequence=colors,
             hole=0.4
         )
         

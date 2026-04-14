@@ -1,7 +1,12 @@
 import streamlit as st
-from PIL import Image, ImageFilter, ImageOps, ImageEnhance
+from PIL import Image
 import io
-from utils import add_sidebar, set_common_style
+from utils import (
+    add_sidebar,
+    set_common_style,
+    extract_colors_from_bytes,
+    filter_image_to_png_bytes,
+)
 
 # 페이지 설정
 st.set_page_config(page_title="이미지 필터 | VCD Toolkit", layout="wide")
@@ -17,14 +22,13 @@ st.write("이미지를 업로드하고 다양한 필터를 적용해 보세요. 
 uploaded_file = st.file_uploader("🖼️ 처리할 이미지를 선택하세요 (JPG, PNG)", type=["jpg", "jpeg", "png"])
 
 if uploaded_file:
-    img = Image.open(uploaded_file).convert("RGB") # 분석을 위해 RGB 변환
+    image_bytes = uploaded_file.getvalue()
+    img = Image.open(io.BytesIO(image_bytes)).convert("RGB")  # 분석을 위해 RGB 변환
     
     # 🎨 컬러 테마 추출 섹션
     with st.container(border=True):
         st.subheader("🎨 이미지 컬러 팔레트 추출")
-        
-        from utils import extract_colors
-        extracted_colors = extract_colors(img, num_colors=6)
+        extracted_colors = extract_colors_from_bytes(image_bytes, num_colors=6)
         
         # 컬러 스와치 렌더링
         c_cols = st.columns(len(extracted_colors))
@@ -58,29 +62,14 @@ if uploaded_file:
                     st.write("") # 공간 맞춤용
 
     # 이미지 처리 로직
-    filtered_img = img.copy()
-    
-    # 1. 기본 필터 적용
-    if filter_type == "Grayscale":
-        filtered_img = ImageOps.grayscale(img).convert("RGB")
-    elif filter_type == "Blur":
-        filtered_img = img.filter(ImageFilter.GaussianBlur(blur_intensity))
-    elif filter_type == "Sepia":
-        sepia_matrix = (
-            0.393, 0.769, 0.189, 0,
-            0.349, 0.686, 0.168, 0,
-            0.272, 0.534, 0.131, 0
-        )
-        filtered_img = img.convert("RGB").convert("RGB", sepia_matrix)
-    elif filter_type == "Vibrant":
-        enhancer = ImageEnhance.Color(img)
-        filtered_img = enhancer.enhance(2.0)
-
-    # 2. 미세 조정 적용
-    enhancer_bright = ImageEnhance.Brightness(filtered_img)
-    filtered_img = enhancer_bright.enhance(brightness)
-    enhancer_con = ImageEnhance.Contrast(filtered_img)
-    filtered_img = enhancer_con.enhance(contrast)
+    filtered_png_bytes = filter_image_to_png_bytes(
+        image_bytes=image_bytes,
+        filter_type=filter_type,
+        brightness=brightness,
+        contrast=contrast,
+        blur_intensity=blur_intensity if filter_type == "Blur" else None,
+    )
+    filtered_img = Image.open(io.BytesIO(filtered_png_bytes)).convert("RGB")
 
     # UI 레이아웃
     col1, col2 = st.columns(2)
@@ -97,11 +86,9 @@ if uploaded_file:
 
     # 다운로드 섹션
     st.divider()
-    buf = io.BytesIO()
-    filtered_img.save(buf, format="PNG")
     st.download_button(
         label="📥 처리된 이미지 저장하기",
-        data=buf.getvalue(),
+        data=filtered_png_bytes,
         file_name=f"vcd_filtered_{filter_type.lower()}.png",
         mime="image/png",
         use_container_width=True
