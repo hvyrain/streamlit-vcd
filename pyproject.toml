@@ -1,10 +1,13 @@
 [project]
 name = "streamlit-vcd"
 version = "0.1.0"
-description = "Add your description here"
+description = "A Streamlit-based toolkit for Visual Communication Design (VCD) workflows, including color analysis and layout prototyping."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = [
     "plotly>=6.7.0",
     "streamlit>=1.56.0",
+    "Pillow>=10.0.0",
+    "colormath>=3.0.0",
+    "numpy>=1.26.0",
 ]
